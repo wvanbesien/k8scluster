@@ -274,3 +274,4 @@ echo "  /etc/kubernetes/manifests/keepalived.yaml"
 # 8. Done
 # ----------------------------
 echo "Configuration files updated and copied to target paths. "
+echo "At this point, you want to configure the first node on the cluster. If you ran this on one of the additional nodes in the cluster, complete the primary node first."
