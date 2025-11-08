@@ -44,6 +44,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 We also need to setup networking (here through Calico. So, run the following BEFORE you add any of the additional nodes. 
 
 ```
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/operator-crds.yaml
 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/tigera-operator.yaml
 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/custom-resources.yaml
 ```
