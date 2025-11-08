@@ -26,12 +26,45 @@ run on each host, select the correct server from the list when given the option.
 ### step 3: 
 run the following script on the primary node. This is the same host you selected as "MASTER". Let everything complete and check the cluster date to ensure this node is active. 
 
-Run
+Run (obviously replace the IP address with that you are using for the VIP)
 ```
-kubectl get nodes
+sudo kubeadm init \
+  --control-plane-endpoint "10.0.1.24:8443" \
+  --upload-certs \
+  --pod-network-cidr=192.168.0.0/16
 ```
-the node must be listed as action before you proceed to the subsequent servers.
+At the end of the script. Instructions will be shown to join the additional nodes. Copy this, and store, you'll need it later. 
+
+setup the kube config
+```
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+We also need to setup networking (here through Calico. So, run the following BEFORE you add any of the additional nodes. 
+
+```
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/tigera-operator.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/custom-resources.yaml
+```
+
+You can watch progress with 
+```
+watch kubectl get tigerastatus
+```
+Once all servers are listed as available. You can proceed to the second and 3rd node. 
+
 
 ### step 4:
 Do this after everything on the primary node has completed. 
 No run the following script to complete the setup on each of the additional nodes. Do this one node at a time. 
+
+Run the command you copied from the output when adding the primary node to the cluster. 
+
+after that, you can also add the kube config command previously ran. 
+
+After a while the node should show as available when running
+```
+kubectl get nodes
+```
+
