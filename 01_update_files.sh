@@ -11,6 +11,8 @@ HAPROXY_CFG="${1:-haproxy.cfg}"
 CHECK_APISERVER_FILE="check_apiserver.sh"
 HAPROXY_YAML_FILE="haproxy.yaml"
 KEEPALIVED_FILE="keepalived.conf"
+KEEPALIVED_YAML_FILE="keepalived.yaml"
+
 
 apiserver_vip=""
 apiserver_dest_port=""
@@ -231,10 +233,44 @@ else
 fi
 
 # ----------------------------
-# 7. Done
+# 7. Copy generated files to system directories
 # ----------------------------
-echo "Updated files:"
-echo "  - $HAPROXY_CFG (backends added)"
-echo "  - $CHECK_APISERVER_FILE (APISERVER_DEST_PORT updated)"
-echo "  - $HAPROXY_YAML_FILE (APISERVER_DEST_PORT updated)"
-echo "  - $KEEPALIVED_FILE (STATE/PRIORITY/APISERVER_VIP/INTERFACE updated for $sel_name)"
+echo "Copying configuration files to system locations..."
+
+# Ensure directories exist
+sudo mkdir -p /etc/haproxy
+sudo mkdir -p /etc/keepalived
+sudo mkdir -p /etc/kubernetes/manifests
+
+# Copy files
+if [[ -f "$HAPROXY_CFG" ]]; then
+  sudo cp "$HAPROXY_CFG" /etc/haproxy/haproxy.cfg
+fi
+
+if [[ -f "$KEEPALIVED_FILE" ]]; then
+  sudo cp "$KEEPALIVED_FILE" /etc/keepalived/keepalived.conf
+fi
+
+if [[ -f "$CHECK_APISERVER_FILE" ]]; then
+  sudo cp "$CHECK_APISERVER_FILE" /etc/keepalived/check_apiserver.sh
+fi
+
+if [[ -f "$HAPROXY_YAML_FILE" ]]; then
+  sudo cp "$HAPROXY_YAML_FILE" /etc/kubernetes/manifests/haproxy.yaml
+fi
+
+if [[ -f "$KEEPALIVED_YAML_FILE" ]]; then
+  sudo cp "$KEEPALIVED_YAML_FILE" /etc/kubernetes/manifests/keepalived.yaml
+fi
+
+echo "✅ Files copied successfully:"
+echo "  /etc/haproxy/haproxy.cfg"
+echo "  /etc/keepalived/keepalived.conf"
+echo "  /etc/keepalived/check_apiserver.sh"
+echo "  /etc/kubernetes/manifests/haproxy.yaml"
+echo "  /etc/kubernetes/manifests/keepalived.yaml"
+
+# ----------------------------
+# 8. Done
+# ----------------------------
+echo "Configuration files updated and copied to target paths. "
