@@ -69,4 +69,9 @@ After a while the node should show as available when running
 ```
 kubectl get nodes
 ```
+### step 5:
+if like me you don't run separate worker nodes and want to run pods on this cluster run:
+```
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+```
 
