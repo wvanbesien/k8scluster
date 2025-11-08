@@ -22,6 +22,7 @@ run on each host, select the correct server from the list when given the option.
 ```
 01_update_files.sh   # update the configuration files to match the correct host
 ```
+At this point, I've had more success by rebooting the node before proceeding with adding it to the cluster. 
 
 ### step 3: 
 run the following script on the primary node. This is the same host you selected as "MASTER". Let everything complete and check the cluster date to ensure this node is active. 
